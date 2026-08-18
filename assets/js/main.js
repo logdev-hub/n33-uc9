@@ -64,6 +64,26 @@
     event.currentTarget.setAttribute('aria-pressed', String(active));
   });
 
+  // Mantém menus e acordeões utilizáveis quando o Bootstrap CDN não carregar.
+  if (!window.bootstrap) {
+    document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(button => button.addEventListener('click', () => {
+      const selector = button.getAttribute('data-bs-target');
+      const target = selector ? document.querySelector(selector) : null;
+      if (!target) return;
+      const willOpen = !target.classList.contains('show');
+      const parentSelector = target.getAttribute('data-bs-parent');
+      if (willOpen && parentSelector) {
+        document.querySelectorAll(`${parentSelector} .accordion-collapse.show`).forEach(open => {
+          if (open !== target) open.classList.remove('show');
+        });
+        document.querySelectorAll(`${parentSelector} [data-bs-toggle="collapse"]`).forEach(control => control.setAttribute('aria-expanded', 'false'));
+      }
+      target.classList.toggle('show', willOpen);
+      button.setAttribute('aria-expanded', String(willOpen));
+      button.classList.toggle('collapsed', !willOpen);
+    }));
+  }
+
   const toast = message => {
     const node = document.createElement('div');
     node.className = 'toast-local';
@@ -91,4 +111,3 @@
     }
   });
 })();
-
