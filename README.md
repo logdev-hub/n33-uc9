@@ -14,7 +14,7 @@ Não é necessário instalar programas ou criar uma conta. O site também pode s
 
 - 11 aulas com fundamentação teórica, situações práticas e resoluções comentadas.
 - 6 atividades por aula, totalizando 66 atividades.
-- Calculadoras de Curva ABC, Kardex PEPS, ponto de pedido, estoque de segurança, EOQ e depreciação.
+- Calculadoras de Curva ABC, Kardex PEPS, ponto de pedido, estoque de segurança, estoque máximo, giro, cobertura, EOQ e depreciação, com exemplos completos de reposição contínua e periódica.
 - Glossário de termos técnicos.
 - Guia para uso responsável de inteligência artificial nos estudos.
 - Conexões entre cada aula e o Projeto Integrador.
