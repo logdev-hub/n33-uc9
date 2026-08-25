@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Como construir a Calculadora de Reposição Contínua no Excel 🧮</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+<style>
+  :root{
+    --navy:#004C94;
+    --navy-dark:#00284A;
+    --orange:#F7941D;
+    --light-blue:#EAF2FC;
+    --excel-green:#217346;
+  }
+  body{
+    font-family:"Segoe UI", Arial, sans-serif;
+    background:#f4f6f9;
+    color:#1c2733;
+  }
+  a{color:var(--navy);}
+
+  /* ---------- HERO ---------- */
+  .hero-banner{
+    background:linear-gradient(135deg,var(--navy-dark) 0%, var(--navy) 65%, #0a5aa8 100%);
+    color:#fff;
+    padding:3.5rem 1rem 5.5rem;
+  }
+  .hero-banner h1{font-weight:800; letter-spacing:-.5px;}
+  .badge-course{background:var(--orange); color:#1a1200; font-weight:700; padding:.45rem .9rem; border-radius:2rem; font-size:.85rem;}
+  .hero-sub{color:#dbe9fb; max-width:680px;}
+
+  /* ---------- STEP NAV (sticky) ---------- */
+  .step-nav-wrap{
+    position:sticky; top:0; z-index:1030;
+    background:#fff; border-bottom:1px solid #dfe6ee;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+  }
+  .step-nav{ display:flex; gap:.4rem; overflow-x:auto; padding:.6rem 1rem; white-space:nowrap;}
+  .step-nav a{
+    text-decoration:none; color:var(--navy); font-weight:600; font-size:.82rem;
+    border:1px solid #cfe0f5; border-radius:2rem; padding:.35rem .85rem;
+    background:#f5f9ff; flex-shrink:0;
+  }
+  .step-nav a:hover{background:var(--navy); color:#fff; border-color:var(--navy);}
+
+  /* ---------- CONTENT CARD ---------- */
+  .content-wrap{margin-top:-3rem; margin-bottom:3rem;}
+  .intro-card{
+    background:#fff; border-radius:14px; padding:1.75rem;
+    box-shadow:0 10px 30px rgba(0,40,74,.12);
+  }
+
+  /* ---------- ACCORDION ---------- */
+  .accordion-item{border:none; margin-bottom:1rem; border-radius:12px !important; overflow:hidden; box-shadow:0 2px 10px rgba(0,40,74,.07);}
+  .accordion-button{
+    background:var(--light-blue); color:var(--navy-dark); font-weight:700; font-size:1.02rem;
+  }
+  .accordion-button:not(.collapsed){background:var(--navy); color:#fff;}
+  .accordion-button:focus{box-shadow:none;}
+  .accordion-button::after{filter:none;}
+  .etapa-tag{
+    display:inline-block; background:var(--orange); color:#1a1200; font-weight:800;
+    border-radius:50%; width:30px; height:30px; line-height:30px; text-align:center;
+    font-size:.85rem; margin-right:.6rem; flex-shrink:0;
+  }
+  .accordion-body{background:#fff; padding:1.5rem;}
+
+  /* ---------- SUBSTEPS ---------- */
+  .substep{display:flex; gap:.85rem; margin-bottom:1.35rem;}
+  .substep-badge{
+    width:32px; height:32px; min-width:32px; border-radius:50%; background:var(--navy);
+    color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.85rem;
+  }
+
+  /* ---------- CODE / FORMULA BOX ---------- */
+  .code-box{
+    background:#0d1f2d; color:#dff3ff; font-family:Consolas,"Courier New",monospace;
+    border:1px dashed #4a90c2; border-radius:8px; padding:.7rem 3.4rem .7rem 1rem;
+    position:relative; font-size:.92rem; overflow-x:auto; margin:.5rem 0;
+  }
+  .copy-btn{
+    position:absolute; top:.4rem; right:.45rem; font-size:.72rem; border:none;
+    background:var(--orange); color:#1a1200; font-weight:700; border-radius:6px; padding:.25rem .55rem;
+    cursor:pointer; transition:.15s;
+  }
+  .copy-btn:hover{filter:brightness(1.08);}
+  .copy-btn.copied{background:var(--excel-green); color:#fff;}
+
+  /* ---------- RIBBON PATH CHIP ---------- */
+  .ribbon-path{
+    display:inline-flex; align-items:center; gap:.35rem; background:#eef3f8;
+    border:1px solid #cfd8e3; border-radius:2rem; padding:.3rem .85rem; font-size:.83rem;
+    color:var(--navy-dark); margin:.25rem 0;
+  }
+
+  /* ---------- CALLOUTS ---------- */
+  .tip-box{border-left:4px solid var(--orange); background:#fff8ec; padding:.75rem 1rem; border-radius:.35rem; font-size:.92rem;}
+  .warn-box{border-left:4px solid #d64545; background:#fdecec; padding:.75rem 1rem; border-radius:.35rem; font-size:.92rem;}
+  .info-box{border-left:4px solid var(--navy); background:#eef5ff; padding:.75rem 1rem; border-radius:.35rem; font-size:.92rem;}
+
+  /* ---------- EXCEL MOCK ---------- */
+  .excel-window{border:1px solid #c9c9c9; border-radius:8px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,.09); margin:.85rem 0; background:#fff;}
+  .excel-titlebar{background:#f3f3f3; border-bottom:1px solid #d0d0d0; padding:.35rem .7rem; font-size:.72rem; color:#666; display:flex; align-items:center; gap:.4rem;}
+  .excel-dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
+  .excel-formula-bar{display:flex; align-items:center; background:#fff; border-bottom:1px solid #d0d0d0; padding:.4rem .7rem; font-family:Consolas,monospace; font-size:.82rem; gap:.5rem; flex-wrap:wrap;}
+  .excel-formula-bar .cell-ref{background:#fff; border:1px solid #b7b7b7; border-radius:3px; padding:.1rem .6rem; font-weight:700; color:var(--navy); min-width:2.6rem; text-align:center;}
+  .excel-formula-bar .fx{color:var(--excel-green); font-weight:800; font-style:italic;}
+  .excel-formula-bar .formula-text{color:#1c2733; word-break:break-all;}
+  .excel-grid-wrap{overflow-x:auto;}
+  table.excel-grid{border-collapse:collapse; width:100%; font-size:.74rem; min-width:680px;}
+  table.excel-grid th.col-h, table.excel-grid td.row-h{background:#f3f3f3; color:#555; text-align:center; font-weight:700; border:1px solid #dcdcdc; padding:.3rem .35rem;}
+  table.excel-grid td{border:1px solid #e6e6e6; padding:.35rem .5rem; white-space:nowrap;}
+  table.excel-grid td.active{outline:2px solid var(--excel-green); outline-offset:-2px; background:#e9f6ee; font-weight:700;}
+  table.excel-grid td.input-cell{color:#1f3fbf; font-weight:600;}
+  table.excel-grid td.calc-cell{color:#333; background:#fafafa;}
+  table.excel-grid td.header-cell{background:var(--navy); color:#fff; font-weight:700; font-size:.68rem; white-space:normal;}
+  table.excel-grid td.title-cell{background:var(--navy); color:#fff; font-weight:700; text-align:center;}
+  table.excel-grid td.sub-cell{background:var(--navy-dark); color:#fff; font-weight:600; text-align:center; font-size:.68rem;}
+  table.excel-grid td.legend-cell{background:var(--light-blue); color:var(--navy-dark); font-weight:600; text-align:center; font-size:.68rem; white-space:normal;}
+  table.excel-grid td.yellow-cell{background:#fff6d9;}
+
+  /* ---------- CHECKLIST ---------- */
+  .checklist-item{display:flex; gap:.6rem; align-items:flex-start; margin-bottom:.6rem;}
+  .checklist-item input{margin-top:.3rem; width:18px; height:18px; accent-color:var(--excel-green);}
+
+  footer{background:var(--navy-dark); color:#cfe0f5; padding:2rem 1rem; font-size:.85rem;}
+  footer a{color:var(--orange);}
+
+  .back-to-top{
+    position:fixed; bottom:1.5rem; right:1.5rem; z-index:1040; background:var(--orange);
+    color:#1a1200; border:none; border-radius:50%; width:48px; height:48px; font-size:1.2rem;
+    box-shadow:0 4px 14px rgba(0,0,0,.25); display:none;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<div class="hero-banner text-center">
+  <span class="badge-course">🎓 Técnico em Logística • UC3 / UC9 — Gestão de Estoques</span>
+  <h1 class="mt-3 display-6">📊 Construindo sua Calculadora de Reposição Contínua no Excel</h1>
+  <p class="hero-sub mx-auto mt-3">
+    Um passo a passo, do zero, para montar no <strong>Excel 365 (pt-BR)</strong> a planilha que calcula
+    Ponto de Pedido, Estoque de Segurança e Lote Econômico (EOQ) — igual à que você viu no exemplo da VETTA.
+    Sem pressa e sem pré-requisitos: se você nunca abriu uma fórmula no Excel, este tutorial é para você. 🙂
+  </p>
+</div>
+
+<!-- ============ STEP NAV ============ -->
+<div class="step-nav-wrap">
+  <div class="step-nav">
+    <a href="#" onclick="goToEtapa(1);return false;">1️⃣ Preparar</a>
+    <a href="#" onclick="goToEtapa(2);return false;">2️⃣ Cabeçalho</a>
+    <a href="#" onclick="goToEtapa(3);return false;">3️⃣ Colunas</a>
+    <a href="#" onclick="goToEtapa(4);return false;">4️⃣ Exemplo</a>
+    <a href="#" onclick="goToEtapa(5);return false;">5️⃣ Fórmulas</a>
+    <a href="#" onclick="goToEtapa(6);return false;">6️⃣ Formatar</a>
+    <a href="#" onclick="goToEtapa(7);return false;">7️⃣ Congelar</a>
+    <a href="#" onclick="goToEtapa(8);return false;">8️⃣ Novas linhas</a>
+    <a href="#" onclick="goToEtapa(9);return false;">9️⃣ Testar</a>
+    <a href="#checklist">✅ Checklist</a>
+  </div>
+</div>
+
+<div class="container content-wrap">
+
+  <!-- ============ INTRO ============ -->
+  <div class="intro-card mb-4">
+    <h5 class="fw-bold" style="color:var(--navy)">🧭 O que você vai construir</h5>
+    <p class="mb-2">
+      Uma <strong>tabela viva</strong>: você digita apenas os dados de um produto (demanda, consumo máximo,
+      lead time, custos) e o Excel calcula automaticamente o consumo médio, o estoque de segurança, o ponto
+      de pedido e o lote econômico — linha por linha, para quantos produtos você quiser.
+    </p>
+    <div class="row g-3 mt-1">
+      <div class="col-md-4">
+        <div class="info-box h-100">🔵 <strong>Colunas azuis</strong> — você digita os dados (entrada)</div>
+      </div>
+      <div class="col-md-4">
+        <div class="info-box h-100">⚫ <strong>Colunas cinzas</strong> — o Excel calcula sozinho (fórmulas)</div>
+      </div>
+      <div class="col-md-4">
+        <div class="info-box h-100">🟡 <strong>Linhas amarelas</strong> — espaço livre para seus produtos</div>
+      </div>
+    </div>
+    <div class="tip-box mt-3">
+      💡 <strong>Dica antes de começar:</strong> no Excel em português, o separador de argumentos dentro das
+      fórmulas é o <strong>ponto e vírgula ( ; )</strong>, não a vírgula — e algumas funções têm nomes traduzidos
+      (ex.: <code>RAIZ</code> no lugar de <code>SQRT</code>, <code>SEERRO</code> no lugar de <code>IFERROR</code>).
+      Já deixamos tudo certinho nos exemplos abaixo. ✅
+    </div>
+  </div>
+
+  <!-- ============ ACCORDION ============ -->
+  <div class="accordion" id="tutorialAccordion">
+
+    <!-- ETAPA 1 -->
+    <div class="accordion-item" id="etapa1">
+      <h2 class="accordion-header" id="heading1">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+          <span class="etapa-tag">1</span> 🗂️ Preparar o arquivo
+        </button>
+      </h2>
+      <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#tutorialAccordion">
+        <div class="accordion-body">
+
+          <div class="substep">
+            <div class="substep-badge">1</div>
+            <div>
+              <strong>Abra o Excel 365</strong> e clique em <em>Pasta de trabalho em branco</em>.
+              <div class="ribbon-path">🖱️ Arquivo → Novo → Pasta de trabalho em branco</div>
+            </div>
+          </div>
+
+          <div class="substep">
+            <div class="substep-badge">2</div>
+            <div>
+              <strong>Renomeie a primeira aba</strong> para <code>Calculadora</code>. Dê duplo clique no nome
+              "Plan1" (parte inferior esquerda da tela) e digite o novo nome.
+            </div>
+          </div>
+
+          <div class="substep">
+            <div class="substep-badge">3</div>
+            <div>
+              <strong>Salve o arquivo</strong> antes de continuar (evita perder o trabalho no meio do caminho).
+              <div class="ribbon-path">🖱️ Arquivo → Salvar Como → escolha a pasta → nomeie, por exemplo, <code>calculadora_reposicao_continua.xlsx</code></div>
+            </div>
+          </div>
+
+          <div class="tip-box">💾 Pressione <strong>Ctrl + S</strong> a cada etapa concluída. É rápido e evita sustos.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ETAPA 2 -->
+    <div class="accordion-item" id="etapa2">
+      <h2 class="accordion-header" id="heading2">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+          <span class="etapa-tag">2</span> 🎨 Montar o cabeçalho colorido
+        </button>
+      </h2>
+      <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#tutorialAccordion">
+        <div class="accordion-body">
+
+          <div class="substep">
+            <div class="substep-badge">1</div>
+            <div>
+              Na <strong>linha 1</strong>, selecione da célula <code>A1</code> até <code>N1</code>
+              (clique em A1, segure Shift e clique em N1).
+              <div class="ribbon-path">🖱️ Guia Página Inicial → grupo Alinhamento → botão <strong>Mesclar e Centralizar</strong></div>
+            </div>
+          </div>
+
+          <div class="substep">
+            <div class="substep-badge">2</div>
+            <div>
+              Digite o título: <em>"📦 Calculadora de Reposição Contínua — Ponto de Pedido, Estoque de Segurança e Lote Econômico (EOQ)"</em>
+            </div>
+          </div>
+
+          <div class="substep">
+            <div class="substep-badge">3</div>
+            <div>
+              Pinte o fundo de azul Senac e deixe o texto branco e em negrito:
+              <div class="ribbon-path">🖱️ Página Inicial → <strong>Cor de Preenchimento</strong> → Mais Cores → RGB <code>0 / 76 / 148</code> (código <code>#004C94</code>)</div>
+              <div class="ribbon-path">🖱️ Página Inicial → <strong>Cor da Fonte</strong> → Branco, e clique em <strong>N</strong> (negrito)</div>
+            </div>
+          </div>
+
+          <div class="substep">
+            <div class="substep-badge">4</div>
+            <div>
+              Repita o processo na <strong>linha 2</strong> (mesclando A2:N2) com o subtítulo
+              <em>"VETTA Suprimentos & Patrimônio • UC9 — Gestão de Materiais e Patrimônio"</em>,
+              usando um azul mais escuro: <code>#00284A</code>.
+            </div>
+          </div>
+
+          <div class="excel-window">
+            <div class="excel-titlebar"><span class="excel-dot" style="background:#ff5f57"></span><span class="excel-dot" style="background:#ffbd2e"></span><span class="excel-dot" style="background:#28c840"></span>&nbsp;calculadora_reposicao_continua.xlsx — Excel</div>
+            <div class="excel-formula-bar">
+              <span class="cell-ref">A1</span><span class="fx">fx</span>
+              <span class="formula-text">📦 Calculadora de Reposição Contínua — Ponto de Pedido, Estoque de Segurança e Lote Econômico (EOQ)</span>
+            </div>
+            <div class="excel-grid-wrap">
+              <table class="excel-grid">
+                <tr><td class="row-h"></td><th class="col-h">A</th><th class="col-h">B</th><th class="col-h">C</th><th class="col-h">D</th><th class="col-h">…</th><th class="col-h">N</th></tr>
+                <tr><td class="row-h">1</td><td class="title-cell active" colspan="6">📦 Calculadora de Reposição Contínua — PP, ES e EOQ</td></tr>
+                <tr><td class="row-h">2</td><td class="sub-cell" colspan="6">VETTA Suprimentos & Patrimônio • UC9</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tip-box">💡 Deixe a <strong>linha 3</strong> em branco (espaçamento visual) e, se quiser, use a <strong>linha 4</strong> para uma legenda de cores como a que aparece no início desta página.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ETAPA 3 -->
+    <div class="accordion-item" id="etapa3">
+      <h2 class="accordion-header" id="heading3">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+          <span class="etapa-tag">3</span> 📋 Criar os cabeçalhos das colunas
+        </button>
+      </h2>
+      <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#tutorialAccordion">
+        <div class="accordion-body">
+          <p>Na <strong>linha 6</strong>, digite um título em cada célula, de <code>A6</code> até <code>N6</code>:</p>
+
+          <div class="excel-window">
+            <div class="excel-grid-wrap">
+              <table class="excel-grid">
+                <tr>
+                  <td class="row-h"></td>
+                  <th class="col-h">A</th><th class="col-h">B</th><th class="col-h">C</th><th class="col-h">D</th>
+                  <th class="col-h">E</th><th class="col-h">F</th><th class="col-h">G</th><th class="col-h">H</th>
+                  <th class="col-h">I</th><th class="col-h">J</th><th class="col-h">K</th><th class="col-h">L</th>
+                  <th class="col-h">M</th><th class="col-h">N</th>
+                </tr>
+                <tr>
+                  <td class="row-h">6</td>
+                  <td class="header-cell">Item / Produto</td>
+                  <td class="header-cell">D — Demanda anual</td>
+                  <td class="header-cell">Dias operacionais</td>
+                  <td class="header-cell">Cmáx — Consumo máx. diário</td>
+                  <td class="header-cell">L — Lead time</td>
+                  <td class="header-cell">S — Custo por pedido</td>
+                  <td class="header-cell">H — Manutenção anual</td>
+                  <td class="header-cell">Consumo médio diário</td>
+                  <td class="header-cell">ES — Estoque de segurança</td>
+                  <td class="header-cell">PP — Ponto de pedido</td>
+                  <td class="header-cell">Q* — Lote econômico</td>
+                  <td class="header-cell">Estoque máximo</td>
+                  <td class="header-cell">Pedidos/ano</td>
+                  <td class="header-cell">Intervalo médio</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="substep mt-3">
+            <div class="substep-badge">1</div>
+            <div>
+              <strong>Dentro de uma mesma célula</strong>, para quebrar o texto em duas linhas (como "D — Demanda anual" em cima de "(unid.)"), digite a primeira parte, pressione <strong>Alt + Enter</strong>, e digite a segunda parte.
+            </div>
+          </div>
+
+          <div class="substep">
+            <div class="substep-badge">2</div>
+            <div>
+              Selecione <code>A6:N6</code> e aplique: fundo azul <code>#004C94</code>, fonte branca em negrito,
+              alinhamento centralizado, e <strong>Quebrar Texto Automaticamente</strong>.
+              <div class="ribbon-path">🖱️ Página Inicial → grupo Alinhamento → <strong>Quebrar Texto Automaticamente</strong></div>
+            </div>
+          </div>
+
+          <div class="substep">
+            <div class="substep-badge">3</div>
+            <div>
+              Aumente a altura da linha 6 para que os textos quebrados fiquem legíveis: clique com o botão
+              direito no número "6" da linha → <strong>Altura da Linha</strong> → digite <code>44</code>.
+            </div>
+          </div>
+
+          <div class="tip-box">
+            💡 Para deixar as colunas com boa largura, selecione todas as colunas de A a N, vá em
+            <strong>Página Inicial → Formatar → Largura da Coluna Automática</strong> — ou arraste manualmente
+            a linha entre as letras das colunas.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ETAPA 4 -->
+    <div class="accordion-item" id="etapa4">
+      <h2 class="accordion-header" id="heading4">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
+          <span class="etapa-tag">4</span> ✍️ Preencher a linha de exemplo (VETTA)
+        </button>
+      </h2>
+      <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#tutorialAccordion">
+        <div class="accordion-body">
+          <p>Na <strong>linha 7</strong>, digite os dados do exemplo das bobinas de etiqueta da VETTA — são as colunas <strong>A a G</strong>, que ficam azuis porque são entradas:</p>
+
+          <div class="excel-window">
+            <div class="excel-grid-wrap">
+              <table class="excel-grid">
+                <tr>
+                  <td class="row-h"></td>
+                  <th class="col-h">A</th><th class="col-h">B</th><th class="col-h">C</th><th class="col-h">D</th>
+                  <th class="col-h">E</th><th class="col-h">F</th><th class="col-h">G</th>
+                </tr>
+                <tr>
+                  <td class="row-h">6</td>
+                  <td class="header-cell">Item</td><td class="header-cell">D</td><td class="header-cell">Dias</td>
+                  <td class="header-cell">Cmáx</td><td class="header-cell">L</td><td class="header-cell">S</td><td class="header-cell">H</td>
+                </tr>
+                <tr>
+                  <td class="row-h">7</td>
+                  <td class="input-cell active">Bobinas de etiqueta</td>
+                  <td class="input-cell">4800</td><td class="input-cell">300</td><td class="input-cell">22</td>
+                  <td class="input-cell">5</td><td class="input-cell">R$ 75,00</td><td class="input-cell">R$ 6,00</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <table class="table table-sm table-bordered mt-3">
+            <thead style="background:var(--light-blue)">
+              <tr><th>Célula</th><th>O que digitar</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>A7</code></td><td>Bobinas de etiqueta (exemplo VETTA)</td></tr>
+              <tr><td><code>B7</code></td><td>4800 → demanda anual (D)</td></tr>
+              <tr><td><code>C7</code></td><td>300 → dias operacionais/ano</td></tr>
+              <tr><td><code>D7</code></td><td>22 → consumo máximo diário (Cmáx)</td></tr>
+              <tr><td><code>E7</code></td><td>5 → lead time em dias (L)</td></tr>
+              <tr><td><code>F7</code></td><td>75 → custo por pedido em R$ (S)</td></tr>
+              <tr><td><code>G7</code></td><td>6 → manutenção unitária anual em R$ (H)</td></tr>
+            </tbody>
+          </table>
+
+          <div class="substep">
+            <div class="substep-badge">💙</div>
+            <div>
+              Pinte a fonte dessas 7 células de azul, para deixar claro que são campos de entrada:
+              selecione <code>A7:G7</code> → <strong>Página Inicial → Cor da Fonte → Azul</strong>.
+            </div>
+          </div>
+
+          <div class="warn-box">
+            ⚠️ Ainda não digite nada nas colunas H a N desta linha — elas vão receber <strong>fórmulas</strong> na próxima etapa.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ETAPA 5 -->
+    <div class="accordion-item" id="etapa5">
+      <h2 class="accordion-header" id="heading5">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5">
+          <span class="etapa-tag">5</span> 🧮 Escrever as fórmulas (linha 7)
+        </button>
+      </h2>
+      <div id="collapse5" class="accordion-collapse collapse" data-bs-parent="#tutorialAccordion">
+        <div class="accordion-body">
+          <p>
+            Agora vem a parte mais importante. Clique em cada célula indicada, digite a fórmula
+            <strong>exatamente como está na caixa</strong> e pressione <strong>Enter</strong>. Use o botão
+            <strong>Copiar</strong> para transferir a fórmula direto para a área de transferência. 📋
+          </p>
+
+          <!-- sub 1 -->
+          <div class="substep">
+            <div class="substep-badge">1</div>
+            <div style="width:100%">
+              <strong>Consumo médio diário</strong> — célula <code>H7</code>
+              <div class="excel-formula-bar mt-2"><span class="cell-ref">H7</span><span class="fx">fx</span><span class="formula-text">=SEERRO(B7/C7;"")</span></div>
+              <div class="code-box" id="f1">=SEERRO(B7/C7;"")
+                <button class="copy-btn" onclick="copyFormula('f1', this)">Copiar</button>
+              </div>
+              <p class="mb-0 small text-muted">Divide a demanda anual pelos dias operacionais. O <code>SEERRO(...;"")</code> só evita que apareça uma mensagem de erro se a linha ainda estiver vazia.</p>
+            </div>
+          </div>
+
+          <!-- sub 2 -->
+          <div class="substep">
+            <div class="substep-badge">2</div>
+            <div style="width:100%">
+              <strong>Estoque de segurança (ES)</strong> — célula <code>I7</code>
+              <div class="excel-formula-bar mt-2"><span class="cell-ref">I7</span><span class="fx">fx</span><span class="formula-text">=SEERRO((D7-H7)*E7;"")</span></div>
+              <div class="code-box" id="f2">=SEERRO((D7-H7)*E7;"")
+                <button class="copy-btn" onclick="copyFormula('f2', this)">Copiar</button>
+              </div>
+              <p class="mb-0 small text-muted">A reserva cobre a diferença entre o consumo máximo e o consumo médio durante os dias de reposição (lead time).</p>
+            </div>
+          </div>
+
+          <!-- sub 3 -->
+          <div class="substep">
+            <div class="substep-badge">3</div>
+            <div style="width:100%">
+              <strong>Ponto de pedido (PP)</strong> — célula <code>J7</code>
+              <div class="excel-formula-bar mt-2"><span class="cell-ref">J7</span><span class="fx">fx</span><span class="formula-text">=SEERRO((H7*E7)+I7;"")</span></div>
+              <div class="code-box" id="f3">=SEERRO((H7*E7)+I7;"")
+                <button class="copy-btn" onclick="copyFormula('f3', this)">Copiar</button>
+              </div>
+              <p class="mb-0 small text-muted">Quando a posição de estoque chegar nesse número, é hora de emitir um novo pedido.</p>
+            </div>
+          </div>
+
+          <!-- sub 4 -->
+          <div class="substep">
+            <div class="substep-badge">4</div>
+            <div style="width:100%">
+              <strong>Lote econômico (Q*)</strong> — célula <code>K7</code>
+              <div class="excel-formula-bar mt-2"><span class="cell-ref">K7</span><span class="fx">fx</span><span class="formula-text">=SEERRO(RAIZ((2*B7*F7)/G7);"")</span></div>
+              <div class="code-box" id="f4">=SEERRO(RAIZ((2*B7*F7)/G7);"")
+                <button class="copy-btn" onclick="copyFormula('f4', this)">Copiar</button>
+              </div>
+              <p class="mb-0 small text-muted"><code>RAIZ()</code> é a função de raiz quadrada no Excel em português (equivalente ao <code>SQRT</code> em inglês). É a fórmula clássica do EOQ.</p>
+            </div>
+          </div>
+
+          <!-- sub 5 -->
+          <div class="substep">
+            <div class="substep-badge">5</div>
+            <div style="width:100%">
+              <strong>Estoque máximo após o recebimento</strong> — célula <code>L7</code>
+              <div class="excel-formula-bar mt-2"><span class="cell-ref">L7</span><span class="fx">fx</span><span class="formula-text">=SEERRO(I7+K7;"")</span></div>
+              <div class="code-box" id="f5">=SEERRO(I7+K7;"")
+                <button class="copy-btn" onclick="copyFormula('f5', this)">Copiar</button>
+              </div>
+              <p class="mb-0 small text-muted">No cenário médio, o lote chega quando ainda restam aproximadamente as unidades do estoque de segurança.</p>
+            </div>
+          </div>
+
+          <!-- sub 6 -->
+          <div class="substep">
+            <div class="substep-badge">6</div>
+            <div style="width:100%">
+              <strong>Pedidos por ano e intervalo médio</strong> — células <code>M7</code> e <code>N7</code>
+              <div class="excel-formula-bar mt-2"><span class="cell-ref">M7</span><span class="fx">fx</span><span class="formula-text">=SEERRO(B7/K7;"")</span></div>
+              <div class="code-box" id="f6">=SEERRO(B7/K7;"")
+                <button class="copy-btn" onclick="copyFormula('f6', this)">Copiar</button>
+              </div>
+              <div class="excel-formula-bar mt-2"><span class="cell-ref">N7</span><span class="fx">fx</span><span class="formula-text">=SEERRO(C7/M7;"")</span></div>
+              <div class="code-box" id="f7">=SEERRO(C7/M7;"")
+                <button class="copy-btn" onclick="copyFormula('f7', this)">Copiar</button>
+              </div>
+              <p class="mb-0 small text-muted">Quantos pedidos são feitos no ano e, em média, de quantos em quantos dias isso acontece.</p>
+            </div>
+          </div>
+
+          <div class="info-box">
+            ✅ Se você digitou tudo certo, a linha 7 deve mostrar: Consumo médio = <strong>16</strong>,
+            ES = <strong>30</strong>, PP = <strong>110</strong>, Q* ≈ <strong>346,41</strong>,
+            Estoque máximo ≈ <strong>376,41</strong>, Pedidos/ano ≈ <strong>13,86</strong>,
+            Intervalo médio ≈ <strong>21,65</strong> dias. Se algum número vier diferente, revise a fórmula
+            daquela célula com calma antes de seguir.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ETAPA 6 -->
+    <div class="accordion-item" id="etapa6">
+      <h2 class="accordion-header" id="heading6">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6">
+          <span class="etapa-tag">6</span> 🎨 Formatar números e cores
+        </button>
+      </h2>
+      <div id="collapse6" class="accordion-collapse collapse" data-bs-parent="#tutorialAccordion">
+        <div class="accordion-body">
+
+          <div class="substep">
+            <div class="substep-badge">1</div>
+            <div>
+              <strong>Moeda</strong>: selecione <code>F7:G7</code> (custo por pedido e manutenção) e aplique o formato de moeda.
+              <div class="ribbon-path">🖱️ Página Inicial → grupo Número → menu suspenso → <strong>Moeda</strong> (ou Ctrl+1 → Contábil/Moeda → símbolo R$)</div>
+            </div>
+          </div>
+
+          <div class="substep">
+            <div class="substep-badge">2</div>
+            <div>
+              <strong>Casas decimais</strong>: selecione <code>H7:N7</code> e defina 2 casas decimais.
+              <div class="ribbon-path">🖱️ Página Inicial → grupo Número → botão <strong>Aumentar Casas Decimais</strong> (clique duas vezes)</div>
+            </div>
+          </div>
+
+          <div class="substep">
+            <div class="substep-badge">3</div>
+            <div>
+              <strong>Destaque visual</strong>: pinte o fundo de <code>H7:N7</code> com um cinza claro
+              (<code>#F2F2F2</code>) para reforçar que são células calculadas — "não mexa aqui".
+            </div>
+          </div>
+
+          <div class="tip-box">
+            💡 Convenção usada nesta calculadora: <strong>fonte azul</strong> = você digita,
+            <strong>fonte preta com fundo cinza</strong> = o Excel calcula. Seguir sempre a mesma cor evita
+            confusão quando a planilha crescer.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ETAPA 7 -->
+    <div class="accordion-item" id="etapa7">
+      <h2 class="accordion-header" id="heading7">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse7">
+          <span class="etapa-tag">7</span> 📌 Congelar painéis
+        </button>
+      </h2>
+      <div id="collapse7" class="accordion-collapse collapse" data-bs-parent="#tutorialAccordion">
+        <div class="accordion-body">
+          <p>Para que os títulos das colunas (linha 6) fiquem sempre visíveis ao rolar a tela para baixo:</p>
+          <div class="substep">
+            <div class="substep-badge">1</div>
+            <div>Clique na célula <code>B7</code> (uma linha abaixo do cabeçalho, primeira coluna de dados).</div>
+          </div>
+          <div class="substep">
+            <div class="substep-badge">2</div>
+            <div>
+              <div class="ribbon-path">🖱️ Guia Exibir → grupo Janela → <strong>Congelar Painéis</strong> → <strong>Congelar Painéis</strong></div>
+            </div>
+          </div>
+          <div class="tip-box">💡 Agora, mesmo rolando até a linha 50, você continuará vendo os títulos das colunas no topo.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ETAPA 8 -->
+    <div class="accordion-item" id="etapa8">
+      <h2 class="accordion-header" id="heading8">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse8">
+          <span class="etapa-tag">8</span> 🖱️ Criar novas linhas para outros produtos
+        </button>
+      </h2>
+      <div id="collapse8" class="accordion-collapse collapse" data-bs-parent="#tutorialAccordion">
+        <div class="accordion-body">
+
+          <div class="substep">
+            <div class="substep-badge">1</div>
+            <div>Selecione o intervalo <code>A7:N7</code> (a linha inteira do exemplo, já formatada e com fórmulas) e copie: <strong>Ctrl + C</strong>.</div>
+          </div>
+
+          <div class="substep">
+            <div class="substep-badge">2</div>
+            <div>Selecione as células <code>A8:A16</code> (nove linhas, de 8 a 16) e cole: <strong>Ctrl + V</strong>.</div>
+          </div>
+
+          <div class="substep">
+            <div class="substep-badge">3</div>
+            <div>
+              Apague apenas os <strong>valores de exemplo</strong> das colunas A a G nessas novas linhas
+              (selecione <code>A8:G16</code> e pressione <strong>Delete</strong>) — as fórmulas das colunas H a N
+              permanecem, prontas para calcular assim que você digitar novos dados.
+            </div>
+          </div>
+
+          <div class="substep">
+            <div class="substep-badge">4</div>
+            <div>
+              Pinte o fundo das células <code>A8:G16</code> de amarelo claro (<code>#FFF6D9</code>) para indicar
+              "linhas livres para preencher".
+            </div>
+          </div>
+
+          <div class="excel-window">
+            <div class="excel-grid-wrap">
+              <table class="excel-grid">
+                <tr><td class="row-h"></td><th class="col-h">A</th><th class="col-h">B</th><th class="col-h">C</th><th class="col-h">…</th><th class="col-h">H</th><th class="col-h">…</th></tr>
+                <tr><td class="row-h">7</td><td class="input-cell">Bobinas de etiqueta</td><td class="input-cell">4800</td><td class="input-cell">300</td><td class="calc-cell">…</td><td class="calc-cell">16</td><td class="calc-cell">…</td></tr>
+                <tr><td class="row-h">8</td><td class="yellow-cell active"></td><td class="yellow-cell"></td><td class="yellow-cell"></td><td class="calc-cell">…</td><td class="calc-cell"></td><td class="calc-cell">…</td></tr>
+                <tr><td class="row-h">9</td><td class="yellow-cell"></td><td class="yellow-cell"></td><td class="yellow-cell"></td><td class="calc-cell">…</td><td class="calc-cell"></td><td class="calc-cell">…</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tip-box">💡 Como as fórmulas usam referências relativas (por exemplo, <code>B7</code>, <code>B8</code>, <code>B9</code>...), o Excel ajusta o número da linha sozinho ao colar. Você não precisa reescrever nada.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ETAPA 9 -->
+    <div class="accordion-item" id="etapa9">
+      <h2 class="accordion-header" id="heading9">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse9">
+          <span class="etapa-tag">9</span> ✅ Testar com um novo produto
+        </button>
+      </h2>
+      <div id="collapse9" class="accordion-collapse collapse" data-bs-parent="#tutorialAccordion">
+        <div class="accordion-body">
+          <p>Vamos validar se tudo está funcionando. Na <strong>linha 8</strong>, digite um segundo produto fictício da VETTA:</p>
+
+          <table class="table table-sm table-bordered">
+            <thead style="background:var(--light-blue)">
+              <tr><th>Célula</th><th>Valor</th><th>Significado</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>A8</code></td><td>Papel A4 (resma)</td><td>Item</td></tr>
+              <tr><td><code>B8</code></td><td>3600</td><td>Demanda anual</td></tr>
+              <tr><td><code>C8</code></td><td>300</td><td>Dias operacionais</td></tr>
+              <tr><td><code>D8</code></td><td>18</td><td>Consumo máximo diário</td></tr>
+              <tr><td><code>E8</code></td><td>4</td><td>Lead time (dias)</td></tr>
+              <tr><td><code>F8</code></td><td>50</td><td>Custo por pedido (R$)</td></tr>
+              <tr><td><code>G8</code></td><td>4</td><td>Manutenção unitária anual (R$)</td></tr>
+            </tbody>
+          </table>
+
+          <p>Se as fórmulas foram copiadas corretamente, a linha 8 deve calcular sozinha, sem você tocar nas colunas H a N.</p>
+
+          <div class="warn-box">
+            ⚠️ Se aparecer alguma célula em branco onde deveria ter número, confira se você digitou os dados
+            nas 7 colunas de entrada (A a G) daquela linha — o <code>SEERRO</code> deixa a célula em branco
+            justamente quando falta algum dado.
+          </div>
+
+          <div class="info-box mt-3">
+            🎉 Pronto! Sua calculadora está funcionando. Agora é só continuar preenchendo as linhas amarelas
+            com os produtos que você quiser analisar.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /accordion -->
+
+  <!-- ============ CHECKLIST ============ -->
+  <div class="intro-card mt-4" id="checklist">
+    <h5 class="fw-bold mb-3" style="color:var(--navy)">✅ Checklist final</h5>
+    <div class="checklist-item"><input type="checkbox" id="c1"><label for="c1">Cabeçalho azul (linhas 1 e 2) mesclado e formatado</label></div>
+    <div class="checklist-item"><input type="checkbox" id="c2"><label for="c2">Linha 6 com os 14 títulos das colunas, em negrito e com quebra de texto</label></div>
+    <div class="checklist-item"><input type="checkbox" id="c3"><label for="c3">Linha 7 preenchida com o exemplo da VETTA (colunas A a G em azul)</label></div>
+    <div class="checklist-item"><input type="checkbox" id="c4"><label for="c4">As 6 fórmulas da linha 7 (colunas H a N) calculando corretamente</label></div>
+    <div class="checklist-item"><input type="checkbox" id="c5"><label for="c5">Formatos de moeda e casas decimais aplicados</label></div>
+    <div class="checklist-item"><input type="checkbox" id="c6"><label for="c6">Painéis congelados na linha 6</label></div>
+    <div class="checklist-item"><input type="checkbox" id="c7"><label for="c7">Linhas 8 a 16 com fórmulas prontas e fundo amarelo nas colunas de entrada</label></div>
+    <div class="checklist-item"><input type="checkbox" id="c8"><label for="c8">Testado com um segundo produto e os resultados batem</label></div>
+    <div class="checklist-item"><input type="checkbox" id="c9"><label for="c9">Arquivo salvo (Ctrl + S) 💾</label></div>
+  </div>
+
+</div><!-- /container -->
+
+<footer class="text-center">
+  <p class="mb-1">📚 Material de apoio — UC3 / UC9 Gestão de Estoques e Materiais e Patrimônio</p>
+  <p class="mb-0">Técnico em Logística • Senac Guarulhos</p>
+</footer>
+
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+  function copyFormula(id, btn){
+    const raw = document.getElementById(id).childNodes[0].textContent.trim();
+    navigator.clipboard.writeText(raw).then(()=>{
+      const original = btn.textContent;
+      btn.textContent = "Copiado! ✅";
+      btn.classList.add("copied");
+      setTimeout(()=>{ btn.textContent = original; btn.classList.remove("copied"); }, 1600);
+    });
+  }
+
+  function goToEtapa(n){
+    const collapseEl = document.getElementById("collapse"+n);
+    const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseEl, {toggle:false});
+    bsCollapse.show();
+    setTimeout(()=>{
+      document.getElementById("etapa"+n).scrollIntoView({behavior:"smooth", block:"start"});
+    }, 120);
+  }
+
+  window.addEventListener("scroll", ()=>{
+    document.getElementById("backToTop").style.display = window.scrollY > 500 ? "block" : "none";
+  });
+</script>
+</body>
+</html>
