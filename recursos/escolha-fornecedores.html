@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escolha de Fornecedores | Gestão de Materiais</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+  :root{
+    --senac-orange:#F37021;
+    --senac-orange-dark:#C6540E;
+    --senac-navy:#0C2340;
+    --senac-navy-soft:#123259;
+    --paper:#FBF7F2;
+    --ink:#1F2933;
+    --ink-soft:#52606D;
+    --line:#E4DCD1;
+    --perfeita:#2E8B57;
+    --monopolistica:#3E7CB1;
+    --oligopolio:#B8860B;
+    --monopolio:#B4302B;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+  }
+  h1,h2,h3,h4,.display-font{
+    font-family:'Poppins',sans-serif;
+  }
+  .container-narrow{max-width:920px;}
+
+  /* ---------- NAV ---------- */
+  .topnav{
+    background:var(--senac-navy);
+    position:sticky; top:0; z-index:50;
+    box-shadow:0 2px 14px rgba(12,35,64,.18);
+  }
+  .topnav .brand{
+    color:#fff; font-family:'Poppins',sans-serif; font-weight:700;
+    font-size:1.05rem; letter-spacing:.2px;
+  }
+  .topnav .brand span{color:var(--senac-orange);}
+  .topnav a.nav-link{
+    color:#CBD8E8 !important; font-weight:500; font-size:.95rem;
+    padding:.9rem .9rem !important;
+    border-bottom:3px solid transparent;
+    transition:.15s;
+  }
+  .topnav a.nav-link:hover{color:#fff !important;}
+  .topnav a.nav-link.active-scroll{
+    color:#fff !important; border-bottom-color:var(--senac-orange);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:linear-gradient(155deg,var(--senac-navy) 0%,var(--senac-navy-soft) 60%,#1a4066 100%);
+    color:#fff; padding:4.5rem 0 5rem;
+    position:relative; overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; right:-6%; top:-30%;
+    width:520px; height:520px; border-radius:50%;
+    background:radial-gradient(circle, rgba(243,112,33,.35) 0%, rgba(243,112,33,0) 70%);
+  }
+  .hero .kicker{
+    color:var(--senac-orange); font-weight:600; letter-spacing:.3px; font-size:.95rem;
+  }
+  .hero h1{font-weight:800; font-size:2.6rem; max-width:680px;}
+  .hero p.lead{color:#C9D6E5; max-width:620px; font-size:1.08rem;}
+  @media (max-width:576px){ .hero h1{font-size:2rem;} }
+
+  section{padding:4rem 0;}
+  section + section{border-top:1px solid var(--line);}
+  .eyebrow-icon{font-size:1.6rem; margin-right:.5rem;}
+  .section-title{font-weight:700; color:var(--senac-navy); margin-bottom:.35rem;}
+  .section-sub{color:var(--ink-soft); max-width:640px;}
+
+  /* ---------- MERCADOS: espectro ---------- */
+  .spectrum-track{
+    position:relative; height:8px; border-radius:6px; margin:3.2rem 0 1rem;
+    background:linear-gradient(90deg,var(--perfeita),var(--monopolistica),var(--oligopolio),var(--monopolio));
+  }
+  .spectrum-labels{display:flex; justify-content:space-between; font-size:.78rem; color:var(--ink-soft); font-weight:600;}
+  .spectrum-labels span:first-child{text-align:left;}
+  .spectrum-labels span:last-child{text-align:right;}
+
+  .market-card{
+    background:#fff; border:1px solid var(--line); border-radius:10px;
+    padding:1.4rem 1.3rem; height:100%;
+    border-top:4px solid var(--card-color, var(--senac-orange));
+    transition:transform .15s, box-shadow .15s;
+  }
+  .market-card:hover{transform:translateY(-3px); box-shadow:0 10px 24px rgba(12,35,64,.09);}
+  .market-card .tag{
+    display:inline-block; font-size:.72rem; font-weight:700; padding:.2rem .55rem;
+    border-radius:20px; color:#fff; background:var(--card-color, var(--senac-orange));
+    margin-bottom:.6rem;
+  }
+  .market-card h4{font-size:1.05rem; margin-bottom:.4rem;}
+  .market-card p{font-size:.9rem; color:var(--ink-soft); margin-bottom:.6rem;}
+  .market-card ul{font-size:.85rem; color:var(--ink); padding-left:1.1rem; margin-bottom:0;}
+  .market-card ul li{margin-bottom:.25rem;}
+
+  /* ---------- KPI ---------- */
+  .kpi-card{
+    background:#fff; border:1px solid var(--line); border-radius:10px; padding:1.2rem 1.3rem;
+  }
+  .kpi-card .kpi-name{font-weight:700; color:var(--senac-navy); font-size:1rem;}
+  .kpi-card .formula{
+    font-size:.8rem; color:var(--ink-soft); background:#F3EEE6; border-radius:6px;
+    padding:.35rem .55rem; display:inline-block; margin-top:.4rem;
+  }
+  .form-range::-webkit-slider-thumb{background:var(--senac-orange);}
+  .form-range::-moz-range-thumb{background:var(--senac-orange);}
+  .weight-value{font-weight:700; color:var(--senac-orange-dark); min-width:2.6rem; text-align:right; display:inline-block;}
+
+  .supplier-panel{
+    background:#fff; border:1px solid var(--line); border-radius:12px; padding:1.4rem;
+  }
+  .supplier-panel table{font-size:.92rem; margin-bottom:0;}
+  .supplier-panel table td, .supplier-panel table th{vertical-align:middle;}
+  .rank-1{background:#FFF3E9 !important;}
+  .rank-badge{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:1.6rem; height:1.6rem; border-radius:50%; font-size:.78rem; font-weight:700;
+    background:var(--senac-navy); color:#fff;
+  }
+  .rank-1 .rank-badge{background:var(--senac-orange);}
+
+  /* ---------- CASE ---------- */
+  .case-hero{
+    background:var(--senac-orange); color:#fff; border-radius:14px; padding:1.8rem 1.9rem;
+    position:relative; overflow:hidden;
+  }
+  .case-hero::before{
+    content:"🧩"; position:absolute; right:1.2rem; top:.6rem; font-size:4.5rem; opacity:.18;
+  }
+  .case-hero h3{font-weight:700; margin-bottom:.4rem;}
+  .case-data-card{
+    background:#fff; border:1px solid var(--line); border-radius:10px; padding:1.1rem 1.2rem; height:100%;
+  }
+  .case-data-card .supplier-name{font-weight:700; color:var(--senac-navy);}
+  .market-pill{
+    font-size:.72rem; font-weight:700; color:#fff; padding:.18rem .55rem; border-radius:20px;
+  }
+  .discussion-box{
+    background:var(--senac-navy); color:#fff; border-radius:12px; padding:1.6rem 1.8rem;
+  }
+  .discussion-box h4{color:#fff; font-weight:700;}
+  .discussion-box li{margin-bottom:.55rem; color:#D9E2EC;}
+
+  footer{
+    background:var(--senac-navy); color:#9FB1C6; padding:2rem 0; font-size:.85rem; text-align:center;
+  }
+
+  @media print{
+    .topnav, footer{display:none;}
+    section{padding:1.2rem 0;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg topnav">
+  <div class="container">
+    <span class="brand">📦 Senac <span>| Gestão de Materiais</span></span>
+    <div class="d-flex" id="navlinks">
+      <a class="nav-link" href="#mercados">🧭 Mercados</a>
+      <a class="nav-link" href="#kpis">📊 KPIs</a>
+      <a class="nav-link" href="#case">🧩 Case</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container container-narrow">
+    <div class="kicker">AULA · GESTÃO DE MATERIAIS</div>
+    <h1>Como escolher o fornecedor certo? 🤝</h1>
+    <p class="lead">Antes de negociar preço, é preciso entender em que tipo de mercado o fornecedor atua — e é isso que muda seu poder de barganha. Depois, avaliamos com KPIs objetivos, sem depender só de intuição.</p>
+  </div>
+</header>
+
+<!-- ================= MERCADOS ================= -->
+<section id="mercados">
+  <div class="container container-narrow">
+    <h2 class="section-title"><span class="eyebrow-icon">🧭</span>Tipos de mercado fornecedor</h2>
+    <p class="section-sub">O poder de negociação do comprador muda conforme quantos players existem do outro lado. Pense nisso como um espectro: de muitos vendedores concorrendo, até um único vendedor dominando tudo.</p>
+
+    <div class="spectrum-track"></div>
+    <div class="spectrum-labels">
+      <span>🟢 Muitos vendedores<br>(poder com o comprador)</span>
+      <span>🔴 Um só vendedor<br>(poder com o fornecedor)</span>
+    </div>
+
+    <div class="row g-3 mt-4">
+      <div class="col-md-3 col-sm-6">
+        <div class="market-card" style="--card-color:var(--perfeita)">
+          <span class="tag">Concorrência perfeita</span>
+          <h4>🌾 Muitos vendedores, produto padronizado</h4>
+          <p>Dezenas de fornecedores oferecem praticamente o mesmo item. Ninguém sozinho controla o preço.</p>
+          <ul>
+            <li>Preço definido pelo mercado, não pelo fornecedor</li>
+            <li>Fácil trocar de fornecedor</li>
+            <li>Ex.: commodities, materiais de escritório genéricos</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="market-card" style="--card-color:var(--monopolistica)">
+          <span class="tag">Conc. monopolística</span>
+          <h4>🎨 Muitos vendedores, produto diferenciado</h4>
+          <p>Vários fornecedores, mas cada um tenta se destacar por marca, atendimento ou customização.</p>
+          <ul>
+            <li>Comprador escolhe por diferencial, não só preço</li>
+            <li>Alguma margem de negociação de ambos os lados</li>
+            <li>Ex.: peças com nível de serviço/atendimento distinto</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="market-card" style="--card-color:var(--oligopolio)">
+          <span class="tag">Oligopólio</span>
+          <h4>🏭 Poucos vendedores dominam</h4>
+          <p>Um pequeno grupo de fornecedores concentra a produção, geralmente por barreiras tecnológicas ou de escala.</p>
+          <ul>
+            <li>Fornecedores têm mais poder de barganha</li>
+            <li>Contratos e relacionamento de longo prazo pesam mais</li>
+            <li>Ex.: componentes técnicos, fabricantes especializados</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="market-card" style="--card-color:var(--monopolio)">
+          <span class="tag">Monopólio</span>
+          <h4>👑 Um único vendedor</h4>
+          <p>Só existe um fornecedor possível para aquele item — por patente, exclusividade ou geografia.</p>
+          <ul>
+            <li>Comprador tem pouquíssima margem de negociação</li>
+            <li>Risco alto de dependência (single source)</li>
+            <li>Ex.: peça de reposição exclusiva do fabricante do equipamento</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= KPIS ================= -->
+<section id="kpis">
+  <div class="container container-narrow">
+    <h2 class="section-title"><span class="eyebrow-icon">📊</span>KPIs para avaliar fornecedores</h2>
+    <p class="section-sub">Ajuste o peso de cada critério conforme o que mais importa para a compra em questão e veja a pontuação de cada fornecedor mudar em tempo real.</p>
+
+    <div class="row g-3 mt-3">
+      <div class="col-md-6">
+        <div class="kpi-card">
+          <div class="kpi-name">💰 Custo unitário</div>
+          <div class="formula">Quanto menor o preço, maior a pontuação</div>
+          <div class="d-flex align-items-center gap-2 mt-3">
+            <input type="range" class="form-range" min="0" max="100" value="25" id="w-custo">
+            <span class="weight-value" id="w-custo-val">25%</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="kpi-card">
+          <div class="kpi-name">✅ Qualidade / conformidade</div>
+          <div class="formula">% de conformidade = 100% − taxa de defeito</div>
+          <div class="d-flex align-items-center gap-2 mt-3">
+            <input type="range" class="form-range" min="0" max="100" value="30" id="w-qualidade">
+            <span class="weight-value" id="w-qualidade-val">30%</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="kpi-card">
+          <div class="kpi-name">⏱️ Prazo de entrega</div>
+          <div class="formula">Quanto menor o prazo, maior a pontuação</div>
+          <div class="d-flex align-items-center gap-2 mt-3">
+            <input type="range" class="form-range" min="0" max="100" value="25" id="w-prazo">
+            <span class="weight-value" id="w-prazo-val">25%</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="kpi-card">
+          <div class="kpi-name">🔄 Flexibilidade de atendimento</div>
+          <div class="formula">Nota de 1 a 5 dada pelo comprador</div>
+          <div class="d-flex align-items-center gap-2 mt-3">
+            <input type="range" class="form-range" min="0" max="100" value="20" id="w-flex">
+            <span class="weight-value" id="w-flex-val">20%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-2">
+      <small class="text-muted">Os pesos são normalizados automaticamente — não precisam somar exatamente 100%.</small>
+    </div>
+
+    <div class="supplier-panel mt-4">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Fornecedor</th>
+              <th>💰 Preço</th>
+              <th>✅ Defeito</th>
+              <th>⏱️ Prazo</th>
+              <th>🔄 Flex.</th>
+              <th>Pontuação</th>
+            </tr>
+          </thead>
+          <tbody id="supplier-table-body"></tbody>
+        </table>
+      </div>
+      <canvas id="scoreChart" height="90" class="mt-3"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CASE ================= -->
+<section id="case">
+  <div class="container container-narrow">
+    <h2 class="section-title"><span class="eyebrow-icon">🧩</span>Case para resolvermos juntos em sala</h2>
+
+    <div class="case-hero mt-3">
+      <h3>🔧 Metalfix Componentes Industriais</h3>
+      <p class="mb-0">A Metalfix precisa fechar contrato de fornecimento de rolamentos industriais para sua linha de montagem. Três fornecedores enviaram proposta. Nosso trabalho hoje é decidir qual escolher — e justificar a escolha.</p>
+    </div>
+
+    <div class="row g-3 mt-1">
+      <div class="col-md-4">
+        <div class="case-data-card">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="supplier-name">Rolamentos Sul Distribuidora</span>
+            <span class="market-pill" style="background:var(--perfeita)">Conc. perfeita</span>
+          </div>
+          <ul class="list-unstyled mb-0" style="font-size:.9rem">
+            <li>💰 R$ 18,50 / un</li>
+            <li>✅ 4,2% de defeito</li>
+            <li>⏱️ 12 dias de prazo</li>
+            <li>🔄 Flexibilidade: 2/5</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="case-data-card">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="supplier-name">TechRol Industrial</span>
+            <span class="market-pill" style="background:var(--oligopolio)">Oligopólio</span>
+          </div>
+          <ul class="list-unstyled mb-0" style="font-size:.9rem">
+            <li>💰 R$ 27,90 / un</li>
+            <li>✅ 0,8% de defeito</li>
+            <li>⏱️ 7 dias de prazo</li>
+            <li>🔄 Flexibilidade: 4/5</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="case-data-card">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="supplier-name">Rolamentos ABC Nacional</span>
+            <span class="market-pill" style="background:var(--monopolistica)">Conc. monopolística</span>
+          </div>
+          <ul class="list-unstyled mb-0" style="font-size:.9rem">
+            <li>💰 R$ 22,30 / un</li>
+            <li>✅ 1,9% de defeito</li>
+            <li>⏱️ 9 dias de prazo</li>
+            <li>🔄 Flexibilidade: 5/5</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center my-4">
+      <span class="badge rounded-pill" style="background:var(--senac-navy); padding:.6rem 1rem; font-size:.85rem;">
+        👆 Volte para a seção de KPIs, ajuste os pesos pensando na realidade da Metalfix e veja quem sai na frente
+      </span>
+    </div>
+
+    <div class="discussion-box mt-4">
+      <h4>🗣️ Perguntas para discussão em sala</h4>
+      <ol>
+        <li>Qual tipo de mercado dá mais poder de negociação para a Metalfix? Isso deveria pesar na decisão além dos KPIs?</li>
+        <li>Se a Metalfix depender só da TechRol Industrial por muito tempo, que risco de mercado ela estaria assumindo?</li>
+        <li>Mudando os pesos dos KPIs, o fornecedor vencedor muda? O que isso revela sobre "não existe fornecedor perfeito, existe fornecedor certo para o contexto"?</li>
+        <li>Faz sentido a Metalfix dividir o pedido entre dois fornecedores em vez de escolher só um? Quando essa estratégia (multi-sourcing) vale a pena?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Material de apoio — Gestão de Materiais · Técnico em Logística · Senac
+</footer>
+
+<script>
+  // ---------- scrollspy simples no menu ----------
+  const navLinks = document.querySelectorAll('#navlinks a');
+  const sections = ['mercados','kpis','case'].map(id => document.getElementById(id));
+  window.addEventListener('scroll', () => {
+    let current = sections[0].id;
+    sections.forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - 90) current = sec.id;
+    });
+    navLinks.forEach(link => {
+      link.classList.toggle('active-scroll', link.getAttribute('href') === '#' + current);
+    });
+  });
+
+  // ---------- dados dos fornecedores ----------
+  const suppliers = [
+    { name: "Rolamentos Sul", price: 18.50, defect: 4.2, lead: 12, flex: 2 },
+    { name: "TechRol Industrial", price: 27.90, defect: 0.8, lead: 7,  flex: 4 },
+    { name: "Rolamentos ABC", price: 22.30, defect: 1.9, lead: 9,  flex: 5 }
+  ];
+
+  const weightIds = { custo: 'w-custo', qualidade: 'w-qualidade', prazo: 'w-prazo', flex: 'w-flex' };
+  Object.values(weightIds).forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+      document.getElementById(id + '-val').textContent = el.value + '%';
+      compute();
+    });
+  });
+
+  function normalize(values, higherIsBetter) {
+    const min = Math.min(...values), max = Math.max(...values);
+    if (max === min) return values.map(() => 100);
+    return values.map(v => {
+      const n = (v - min) / (max - min);
+      return (higherIsBetter ? n : 1 - n) * 100;
+    });
+  }
+
+  let chart;
+  function compute() {
+    const wCusto = +document.getElementById('w-custo').value;
+    const wQual = +document.getElementById('w-qualidade').value;
+    const wPrazo = +document.getElementById('w-prazo').value;
+    const wFlex = +document.getElementById('w-flex').value;
+    const totalW = wCusto + wQual + wPrazo + wFlex || 1;
+
+    const custoScores = normalize(suppliers.map(s => s.price), false);
+    const qualScores  = normalize(suppliers.map(s => 100 - s.defect), true);
+    const prazoScores = normalize(suppliers.map(s => s.lead), false);
+    const flexScores  = normalize(suppliers.map(s => s.flex), true);
+
+    const finalScores = suppliers.map((s, i) => {
+      const raw = (custoScores[i]*wCusto + qualScores[i]*wQual + prazoScores[i]*wPrazo + flexScores[i]*wFlex) / totalW;
+      return Math.round(raw * 10) / 10;
+    });
+
+    const ranked = suppliers.map((s, i) => ({...s, score: finalScores[i]}))
+      .sort((a,b) => b.score - a.score);
+
+    const tbody = document.getElementById('supplier-table-body');
+    tbody.innerHTML = '';
+    ranked.forEach((s, i) => {
+      const tr = document.createElement('tr');
+      if (i === 0) tr.classList.add('rank-1');
+      tr.innerHTML = `
+        <td><span class="rank-badge">${i+1}</span></td>
+        <td><strong>${s.name}</strong></td>
+        <td>R$ ${s.price.toFixed(2)}</td>
+        <td>${s.defect}%</td>
+        <td>${s.lead} dias</td>
+        <td>${s.flex}/5</td>
+        <td><strong>${s.score}</strong> / 100</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    const chartLabels = suppliers.map(s => s.name);
+    const chartData = suppliers.map((s,i) => finalScores[i]);
+    if (chart) {
+      chart.data.datasets[0].data = chartData;
+      chart.update();
+    } else {
+      chart = new Chart(document.getElementById('scoreChart'), {
+        type: 'bar',
+        data: {
+          labels: chartLabels,
+          datasets: [{
+            label: 'Pontuação ponderada',
+            data: chartData,
+            backgroundColor: ['#2E8B57', '#B8860B', '#3E7CB1'],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, max: 100 } }
+        }
+      });
+    }
+  }
+
+  compute();
+</script>
+
+</body>
+</html>
