@@ -1,0 +1,101 @@
+{
+  "empresa": {
+    "nome": "VETTA Suprimentos & Patrimônio Ltda.",
+    "cidade": "Guarulhos (SP)",
+    "diasUteisAno": 250,
+    "personagens": [
+      { "nome": "Renata Aquino", "funcao": "Auxiliar de almoxarifado", "papel": "conhece o estoque de perto, faz as contagens e sente a falta de toner na pele.", "emoji": "📦" },
+      { "nome": "Diego Bittencourt", "funcao": "Estagiário de compras", "papel": "monta as cotações e sabe usar bem as planilhas.", "emoji": "🚚" },
+      { "nome": "Otávio Ferraz", "funcao": "Supervisor de patrimônio", "papel": "cuida das plaquetas, do inventário e da depreciação dos bens.", "emoji": "🏢" },
+      { "nome": "Fernanda Lopes", "funcao": "Compradora sênior", "papel": "negocia com fornecedores e apresenta o relatório à diretoria.", "emoji": "📑" },
+      { "nome": "ALMA", "funcao": "Assistente de IA", "papel": "confere dados e explica os limites do que pode afirmar. Ela dá dicas, mas não decide por você.", "emoji": "🤖" }
+    ]
+  },
+  "abc": {
+    "itens": [
+      { "item": "Papel sulfite A4 (resma)", "demanda": 12000, "custoUnit": 24.00 },
+      { "item": "Cartucho de toner", "demanda": 900, "custoUnit": 210.00 },
+      { "item": "Caneta esferográfica (cx 50)", "demanda": 600, "custoUnit": 35.00 },
+      { "item": "Cadeira ergonômica", "demanda": 150, "custoUnit": 480.00 },
+      { "item": "Luva de segurança (par)", "demanda": 4800, "custoUnit": 6.50 },
+      { "item": "Fita adesiva (rolo)", "demanda": 3000, "custoUnit": 4.00 },
+      { "item": "Pasta suspensa (cx 25)", "demanda": 400, "custoUnit": 45.00 },
+      { "item": "Etiqueta patrimonial (rolo)", "demanda": 240, "custoUnit": 30.00 },
+      { "item": "Grampeador", "demanda": 120, "custoUnit": 28.00 },
+      { "item": "Clipes (cx)", "demanda": 1500, "custoUnit": 3.00 }
+    ],
+    "limiteA": 80,
+    "limiteB": 95
+  },
+  "reposicaoToner": {
+    "demandaAnual": 900,
+    "custoUnitario": 210.00,
+    "custoPedido": 84.00,
+    "taxaManutencao": 0.20,
+    "tempoReposicaoDiasUteis": 10,
+    "consumoMaximoDiario": 5,
+    "politicaAtualQ": 150,
+    "saldoAtual": 52,
+    "desafioEstatistico": { "sigma": 1.2, "z95": 1.65 }
+  },
+  "inventarioEstoque": {
+    "itens": [
+      { "item": "Papel sulfite A4 (resma)", "custoUnit": 24.00, "qtdSistema": 1800, "qtdFisica": 1764 },
+      { "item": "Cartucho de toner", "custoUnit": 210.00, "qtdSistema": 52, "qtdFisica": 52 },
+      { "item": "Cadeira ergonômica", "custoUnit": 480.00, "qtdSistema": 32, "qtdFisica": 32 },
+      { "item": "Luva de segurança (par)", "custoUnit": 6.50, "qtdSistema": 700, "qtdFisica": 700 },
+      { "item": "Fita adesiva (rolo)", "custoUnit": 4.00, "qtdSistema": 210, "qtdFisica": 224 }
+    ],
+    "metaAcuraciadeItens": 95,
+    "metaAcuraciadeValor": 98
+  },
+  "fornecedores": {
+    "quantidadeCotada": 60,
+    "custoOportunidadeMensal": 0.02,
+    "pesos": { "preco": 0.40, "prazo": 0.25, "qualidade": 0.20, "atendimento": 0.15 },
+    "propostas": [
+      { "id": "A", "nome": "Alfa Suprimentos", "precoUnit": 205.00, "frete": 180.00, "prazoDias": 10, "pagamento": "30 dias, ou à vista com 3% de desconto sobre as mercadorias", "qualidade": 8, "atendimento": 8,
+        "condicoes": [ { "tipo": "30 dias", "nMeses": 1, "desconto": 0 }, { "tipo": "à vista (3% sobre mercadorias)", "nMeses": 0, "desconto": 0.03 } ] },
+      { "id": "B", "nome": "Beta Distribuidora", "precoUnit": 198.00, "frete": 320.00, "prazoDias": 15, "pagamento": "Somente à vista (sem desconto)", "qualidade": 7, "atendimento": 6,
+        "condicoes": [ { "tipo": "à vista", "nMeses": 0, "desconto": 0 } ] },
+      { "id": "C", "nome": "Central de Toners", "precoUnit": 210.00, "frete": 0.00, "prazoDias": 5, "pagamento": "30 dias (sem desconto)", "qualidade": 9, "atendimento": 9,
+        "condicoes": [ { "tipo": "30 dias", "nMeses": 1, "desconto": 0 } ] }
+    ]
+  },
+  "patrimonio": {
+    "empilhadeira": {
+      "plaqueta": "P-0101",
+      "bem": "Empilhadeira elétrica",
+      "valorAquisicao": 96000.00,
+      "dataAquisicao": "2024-07-01",
+      "vidaUtilAnos": 10,
+      "residualPercent": 0.10,
+      "metodo": "Linear",
+      "dataBase": "2026-12-31"
+    },
+    "notebookLenovo": {
+      "plaqueta": "P-0104",
+      "bem": "Notebook Lenovo",
+      "valorAquisicao": 5400.00,
+      "dataAquisicao": "2025-01-01",
+      "vidaUtilAnos": 5,
+      "residualPercent": 0,
+      "metodo": "Linear",
+      "dataBase": "2026-12-31"
+    },
+    "inventarioFisico": [
+      { "plaqueta": "P-0101", "bem": "Empilhadeira elétrica", "localSistema": "Almoxarifado", "constatacao": "Localizada no Almoxarifado, plaqueta legível", "classe": "Máquinas e equipamentos", "situacao": "Conforme", "acao": "Manter no inventário" },
+      { "plaqueta": "P-0102", "bem": "Paleteira manual", "localSistema": "Almoxarifado", "constatacao": "Localizada no Almoxarifado, plaqueta legível", "classe": "Máquinas e equipamentos", "situacao": "Conforme", "acao": "Manter no inventário" },
+      { "plaqueta": "P-0103", "bem": "Notebook Dell", "localSistema": "Compras", "constatacao": "Localizado no setor Financeiro", "classe": "Equipamentos de informática", "situacao": "Local divergente", "acao": "Registrar transferência e atualizar o local" },
+      { "plaqueta": "P-0104", "bem": "Notebook Lenovo", "localSistema": "Compras", "constatacao": "Não encontrado em nenhum setor", "classe": "Equipamentos de informática", "situacao": "Não localizado", "acao": "Abrir apuração formal e comunicar o responsável" },
+      { "plaqueta": "P-0105", "bem": "Impressora laser", "localSistema": "Expedição", "constatacao": "Localizada, plaqueta ilegível", "classe": "Equipamentos de informática", "situacao": "Plaqueta ilegível", "acao": "Reetiquetar com a mesma numeração" },
+      { "plaqueta": "P-0106", "bem": "Estante porta-paletes", "localSistema": "Almoxarifado", "constatacao": "Localizada, plaqueta legível", "classe": "Móveis e utensílios", "situacao": "Conforme", "acao": "Manter no inventário" },
+      { "plaqueta": "P-0107", "bem": "Mesa de reunião", "localSistema": "Diretoria", "constatacao": "Localizada, plaqueta legível", "classe": "Móveis e utensílios", "situacao": "Conforme", "acao": "Manter no inventário" },
+      { "plaqueta": "(sem nº)", "bem": "Monitor 27\" encontrado em Compras", "localSistema": "— (sem registro)", "constatacao": "Sem plaqueta e sem registro no sistema", "classe": "Equipamentos de informática", "situacao": "Sobra física", "acao": "Investigar origem, cadastrar e plaquetar" }
+    ]
+  },
+  "metadados": {
+    "origem": "casedocente.pdf — Case VETTA, Senac Guarulhos, Técnico em Administração, Turma ADM N33, UC 9",
+    "aviso": "Conteúdo didático adaptado do Guia do Docente para apresentação ao aluno. A pauta de avaliação reservada ao docente não é reproduzida nesta plataforma."
+  }
+}

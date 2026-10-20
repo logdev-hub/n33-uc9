@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VETTA EDU | Operação Reposição Inteligente</title>
+<meta name="description" content="Plataforma educacional do Case VETTA — Senac Guarulhos, Técnico em Administração, UC 9: Gestão de Materiais e Patrimônio.">
+
+<!-- Bootstrap 5 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<a href="#conteudo" class="skip-link">Pular para o conteúdo</a>
+
+<div class="d-print-none" style="background:#04335E;color:#CFE2F5;font-size:.82rem;padding:.3rem 1rem;text-align:center;">
+  <a href="../../index.html" style="color:#fff;text-decoration:underline;">← Voltar para o site da UC 9</a>
+  — este é o Laboratório interativo do Case VETTA (aplicação integrada das Aulas 9, 10 e 11)
+</div>
+
+<header class="vetta-topbar">
+  <div class="container-fluid d-flex align-items-center justify-content-between">
+    <button class="btn vetta-btn-icon d-lg-none" id="btnMenu" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebarNav">
+      <i class="bi bi-list"></i>
+    </button>
+    <a class="vetta-brand" href="#/inicio">
+      <span class="vetta-brand-mark">VETTA</span><span class="vetta-brand-sub">EDU</span>
+    </a>
+    <div class="vetta-topbar-meta d-none d-md-flex">
+      Senac Guarulhos · Técnico em Administração · ADM N33 · UC 9
+    </div>
+    <div class="vetta-progress-mini" title="Progresso do case">
+      <span id="progressLabel">0%</span>
+      <div class="vetta-progress-track"><div class="vetta-progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+  </div>
+</header>
+
+<div class="vetta-shell">
+  <nav id="sidebarNav" class="vetta-sidebar" aria-label="Navegação principal">
+    <div class="vetta-sidebar-inner">
+      <ul class="nav flex-column vetta-nav" id="navList"></ul>
+    </div>
+  </nav>
+
+  <div class="vetta-sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <main id="conteudo" class="vetta-main" tabindex="-1">
+    <div id="app" class="vetta-app-view"></div>
+  </main>
+</div>
+
+<footer class="vetta-footer">
+  <div class="container-fluid">
+    <small>VETTA EDU — material didático baseado no Case VETTA (Senac Guarulhos, Técnico em Administração, UC 9: Gestão de Materiais e Patrimônio). Conteúdo adaptado do Guia do Docente para uso em sala de aula; não substitui a orientação do(a) professor(a).</small>
+  </div>
+</footer>
+
+<!-- Libs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/13.0.0/math.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+
+<!-- Núcleo de dados e cálculo -->
+<script src="assets/js/data.js"></script>
+<script src="assets/js/calculations.js"></script>
+<script src="assets/js/prompts-data.js"></script>
+
+<!-- Utilidades -->
+<script src="assets/js/charts.js"></script>
+<script src="assets/js/excel-export.js"></script>
+<script src="assets/js/components.js"></script>
+
+<!-- Views -->
+<script src="assets/js/views/home.js"></script>
+<script src="assets/js/views/conheca.js"></script>
+<script src="assets/js/views/etapa1.js"></script>
+<script src="assets/js/views/etapa2.js"></script>
+<script src="assets/js/views/etapa3.js"></script>
+<script src="assets/js/views/etapa4.js"></script>
+<script src="assets/js/views/etapa5.js"></script>
+<script src="assets/js/views/etapa6.js"></script>
+<script src="assets/js/views/excel-lab.js"></script>
+<script src="assets/js/views/prompts.js"></script>
+<script src="assets/js/views/simulador.js"></script>
+<script src="assets/js/views/copilot.js"></script>
+<script src="assets/js/views/downloads.js"></script>
+
+<!-- App (roteador) -->
+<script src="assets/js/app.js"></script>
+
+</body>
+</html>

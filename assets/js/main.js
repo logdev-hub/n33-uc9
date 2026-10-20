@@ -21,6 +21,9 @@
               <li><a class="dropdown-item" href="${root}recursos/calculadoras.html">Calculadoras</a></li>
               <li><a class="dropdown-item" href="${root}recursos/glossario.html">Glossário</a></li>
               <li><a class="dropdown-item" href="${root}recursos/como-usar-ia.html">Como usar IA</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="${root}recursos/laboratorio-vetta/index.html">🧪 Laboratório do Case VETTA</a></li>
+              <li><a class="dropdown-item" href="${root}excel.html">Como montar no Excel</a></li>
             </ul></li>
           </ul>
           <div class="access-tools ms-lg-3" aria-label="Ferramentas de acessibilidade">

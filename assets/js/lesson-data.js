@@ -219,7 +219,8 @@ window.UC9_LESSONS = [
     research: ['manuais de inventário patrimonial de órgãos públicos','“ponto de pedido estoque de segurança” em livros de logística','princípios de gestão de ativos da família ISO 55000'],
     prompt: 'Confira meu ponto de pedido. Antes de calcular, verifique se consumo e lead time usam a mesma unidade. Mostre ES e PP separadamente, interprete o resultado e liste dados que precisam de validação.',
     ai: 'A IA pode conferir unidade, fórmula e cenários. Ela não confirma saldo físico, movimentações, lead time real ou adequação do modelo ao risco da operação.',
-    closing: 'Esta aplicação integrada aproxima o PI da operação real: disponibilidade depende tanto do cadastro dos bens quanto da reposição planejada das peças.'
+    closing: 'Esta aplicação integrada aproxima o PI da operação real: disponibilidade depende tanto do cadastro dos bens quanto da reposição planejada das peças.',
+    lab: { href: '../recursos/laboratorio-vetta/index.html#/etapa-2', label: '🧮 Abrir Etapa 2 — Política de reposição (LEC, SS, PP)', descricao: 'o Laboratório do Case VETTA calcula LEC, estoque de segurança e ponto de pedido do toner passo a passo, com simulação do ciclo de estoque.' }
   },
   {
     n: 10, title: 'Aquisição de Materiais e Fornecedores', hours: '3,5h', indicator: 'Indicador 2', bloom: 'Analisar', spiral: 'aplicação integrada',
@@ -243,7 +244,8 @@ window.UC9_LESSONS = [
     research: ['“modelo de Wilson lote econômico de compra” em livros de operações','conteúdos do SEBRAE sobre planejamento de compras','boas práticas de custo total de aquisição'],
     prompt: 'Calcule o EOQ com D, S e H que fornecerei. Antes, confirme unidades e período. Mostre fórmula, substituição, raiz e arredondamento; depois liste premissas e fatores comerciais não cobertos.',
     ai: 'A IA pode calcular e testar cenários. Custos, demanda, embalagem, capacidade e condições do fornecedor devem ser comprovados antes da decisão.',
-    closing: 'A proposta une pesquisa de fornecedores e política de reposição do PI. Ela mostra que quantidade de compra é uma decisão econômica e operacional.'
+    closing: 'A proposta une pesquisa de fornecedores e política de reposição do PI. Ela mostra que quantidade de compra é uma decisão econômica e operacional.',
+    lab: { href: '../recursos/laboratorio-vetta/index.html#/etapa-4', label: '🧮 Abrir Etapa 4 — Escolha do fornecedor', descricao: 'o Laboratório do Case VETTA compara propostas reais de fornecedores por custo total, valor presente e critérios ponderados.' }
   },
   {
     n: 11, title: 'Elaboração de Relatórios Patrimoniais', hours: '3,5h', indicator: 'Indicador 5', bloom: 'Avaliar', spiral: 'aplicação integrada',
@@ -267,7 +269,8 @@ window.UC9_LESSONS = [
     research: ['modelos de relatório de inventário patrimonial em órgãos públicos','boas práticas de qualidade e governança de dados','princípios da ISO 55000 para informação sobre ativos'],
     prompt: 'Revise a estrutura do meu relatório patrimonial. Confira se objetivo, escopo, fonte, achados, limitações e plano de ação estão claros. Não invente totais; sinalize afirmações sem evidência.',
     ai: 'A IA pode melhorar clareza e consistência, desde que se usem dados autorizados e minimizados. A revisão humana confirma números, contexto, sigilo e responsabilidade.',
-    closing: 'O relatório final fecha o ciclo da UC: dados de materiais e patrimônio sustentam ações. No PI, a mesma lógica transforma cálculos de estoque e reposição em proposta comunicável.'
+    closing: 'O relatório final fecha o ciclo da UC: dados de materiais e patrimônio sustentam ações. No PI, a mesma lógica transforma cálculos de estoque e reposição em proposta comunicável.',
+    lab: { href: '../recursos/laboratorio-vetta/index.html#/etapa-6', label: '🧮 Abrir Etapa 6 — Relatório gerencial', descricao: 'o Laboratório do Case VETTA gera um relatório completo a partir dos cálculos das etapas anteriores e oferece um construtor guiado para sua própria análise.' }
   }
 ];
 
